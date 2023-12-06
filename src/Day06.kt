@@ -1,3 +1,7 @@
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.sqrt
+
 fun main() {
     fun parseInput(input: String): List<Int> {
         return input.substring(input.indexOf(':') + 1)
@@ -41,18 +45,28 @@ fun main() {
         return result
     }
 
-    fun part2(input: List<String>): Int {
+    fun part2(input: List<String>): Long {
         val time = parseInputV2(input[0])
         val maxDistance = parseInputV2(input[1])
 
-            var numWaysToWin = 0
-            for (i in 1 until time) {
-                if (getTravelDistance(time, i) > maxDistance) {
-                    numWaysToWin++
-                }
-            }
+//        var numWaysToWin = 0
+//        for (i in 1 until time) {
+//            if (getTravelDistance(time, i) > maxDistance) {
+//                numWaysToWin++
+//            }
+//        }
 
-        return numWaysToWin
+
+        // An optimized way using quadratic formula.
+        // If we are holding down the button for x milliseconds,
+        // and the total time is t milliseconds,
+        // the total distance traveled is x * (t - x), or tx - x^2
+        // We want to solve for when tx - x^2 > maxDist, or x^2 - tx - maxDist > 0
+        // ax^2 + bx + c = 0 means x = (-b +- sqrt(b^2 - 4ac) / 2a
+        val highRoot = time + sqrt((time * time - 4 * maxDistance).toDouble()) / 2
+        val lowRoot = time - sqrt((time * time - 4 * maxDistance).toDouble()) / 2
+
+        return (ceil(highRoot - 1) - floor(lowRoot + 1)).toLong() + 1
     }
 
     // test if implementation meets criteria from the description, like:
